@@ -1,7 +1,7 @@
 const users = [];
 
-const joinUser = (id, name, room) => {
-  const u = { id, name, room };
+const joinUser = (id, username, room) => {
+  const u = { id, username, room };
   users.push(u);
   return u;
 };
