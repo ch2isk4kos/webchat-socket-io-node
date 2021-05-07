@@ -6,4 +6,11 @@ const joinUser = (id, name, room) => {
   return u;
 };
 
-module.exports = joinUser;
+const getCurrentUser = (id) => {
+  return users.find((u) => u.id === id);
+};
+
+module.exports = {
+  joinUser,
+  getCurrentUser,
+};
