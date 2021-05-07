@@ -1,6 +1,8 @@
 // main.js listens for client events to send server.js
 const form = document.getElementById("chat-form");
 const messages = document.getElementsByClassName("chat-messages");
+const roomName = document.getElementById("room-name");
+const pool = document.getElementById("users");
 const socket = io(); // socket.io script from chat.html
 
 // url query -> username && chatroom
@@ -13,6 +15,12 @@ console.log(username, room);
 
 // join chatroom
 socket.emit("join", { username, room });
+
+// get pool from room
+socket.on("userPool", ({ room, users }) => {
+  renderRoomName(room);
+  renderRoomPool(users);
+});
 
 // render message response from server
 socket.on("message", (msg) => {
@@ -39,4 +47,20 @@ const renderMessage = (message) => {
     <p class="meta">${message.username} <span>${message.time}</span></p>
     <p class="text">${message.text}</p>`;
   document.querySelector(".chat-messages").appendChild(div);
+};
+
+// display user pool to DOM
+const renderRoomName = (name) => {
+  roomName.innerText = name;
+};
+
+// display user pool to DOM
+const renderRoomPool = (users) => {
+  pool.innerHTML = `${users
+    .map(
+      (u) => `
+    <li>${u.username}</li>
+    `
+    )
+    .join("")}`;
 };
