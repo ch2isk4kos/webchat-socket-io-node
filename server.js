@@ -32,7 +32,10 @@ io.on("connection", (socket) => {
 
     socket.emit(
       "message",
-      formatMessage("Chatbot", `Welcome to the ${u.room} chatroom!`)
+      formatMessage(
+        "Chatbot",
+        `Welcome to the ${u.room} chatroom ${u.username}!`
+      )
     );
     socket.broadcast
       .to(u.room)
@@ -50,11 +53,14 @@ io.on("connection", (socket) => {
 
   // runs when client instance disconnects
   socket.on("disconnect", () => {
-    const u = getCurrentUser(socket.id);
-    io.to(u.room).emit(
-      "message",
-      formatMessage("Chatbot", `${u.username} has left the chatroom.`)
-    );
+    const u = disconnectUser(socket.id);
+
+    if (u) {
+      io.to(u.room).emit(
+        "message",
+        formatMessage("Chatbot", `${u.username} has left the chatroom.`)
+      );
+    }
   });
 });
 
