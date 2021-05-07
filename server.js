@@ -6,8 +6,12 @@ const socket = require("socket.io");
 
 // client import utility functions
 const formatMessage = require("./public/util/messages");
-const { joinUser, getCurrentUser } = require("./public/util/users");
-const { join } = require("path");
+const {
+  joinUser,
+  getCurrentUser,
+  disconnectUser,
+  getPoolFromRoom,
+} = require("./public/util/users");
 
 // initialization
 const app = express();
