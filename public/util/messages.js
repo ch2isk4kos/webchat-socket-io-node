@@ -1,10 +1,10 @@
 const moment = require("moment");
 
-const formatMessage = (username, message) => {
+const formatMessage = (username, string) => {
   return {
     username: username,
-    message: message,
-    time: moment.format("hour:minutes a"),
+    text: string,
+    time: moment().format("h:mm a"),
   };
 };
 
