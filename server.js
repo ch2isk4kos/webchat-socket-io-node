@@ -43,6 +43,12 @@ io.on("connection", (socket) => {
         "message",
         formatMessage("Chatbot", `${u.username} has entered the chatroom!`)
       );
+
+    // update pool
+    io.to(u.room).emit("userPool", {
+      room: u.room,
+      users: getPoolFromRoom(u.room),
+    });
   });
 
   // listens for user message submission
