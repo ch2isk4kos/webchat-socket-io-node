@@ -6,6 +6,8 @@ const socket = require("socket.io");
 
 // client import utility functions
 const formatMessage = require("./public/util/messages");
+const { joinUser, getCurrentUser } = require("./public/util/users");
+const { join } = require("path");
 
 // initialization
 const app = express();
@@ -18,8 +20,11 @@ const PORT = 3000 || process.env.PORT;
 app.use(express.static(path.join(__dirname, "public"))); // set static folder to render html
 
 io.on("connection", (socket) => {
-  // run when user joins chatroom
+  // run when client instance joins chatroom
   socket.on("join", ({ username, room }) => {
+    const user = joinUser(socket.id, username, room);
+    socket.join(user.room);
+
     socket.emit(
       "message",
       formatMessage("Chatbot", `Welcome to the ${room} chatroom!`)
