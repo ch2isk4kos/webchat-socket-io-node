@@ -14,19 +14,19 @@ console.log(username, room);
 // join chatroom
 socket.emit("join", { username, room });
 
-// message response from server
+// render message response from server
 socket.on("message", (msg) => {
   console.log("message:", msg);
   renderMessage(msg);
-  messages.scrollTop = messages.scrollHeight; // scroll down on new message
+  messages.scrollTop = messages.scrollHeight;
 });
 
 // add listener for form submission
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  const message = e.target.elements.msg.value; // get client instance message string
+  const message = e.target.elements.msg.value;
   console.log("message sent to server:", message);
-  socket.emit("userMessage", message); // emit client instance message to the server
+  socket.emit("userMessage", message);
   e.target.elements.msg.value = "";
   e.target.elements.msg.focus();
 });
