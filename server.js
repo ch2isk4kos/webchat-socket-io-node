@@ -14,9 +14,17 @@ const PORT = 3000 || process.env.PORT;
 // middleware
 app.use(express.static(path.join(__dirname, "public"))); // set static folder to render html
 
-// run server when client connects
+// Listeners
 io.on("connection", (socket) => {
-  console.log("New websocket connected");
+  // run server when client connects
+  socket.emit("message", "Welcome to the chatroom!"); // emit a message to newly connected client instance
+  socket.broadcast.emit("message", "New user has entered the chatroom!"); // broadcast a message to client minus client instance
+  // io.emit("", "") --> sends message to all instances
+
+  // runs when client instance disconnects
+  socket.on("disconnect", () => {
+    io.emit("message", "User has left the chatroom.");
+  });
 });
 
 // server
