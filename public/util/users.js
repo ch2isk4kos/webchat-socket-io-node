@@ -15,7 +15,7 @@ const getCurrentUser = (id) => {
 // client instance
 const disconnectUser = (id) => {
   const index = users.findIndex((u) => u.id === id);
-  if (index !== -1) return users.splice(index, 1);
+  if (index !== -1) return users.splice(index, 1)[0];
 };
 
 // pool
