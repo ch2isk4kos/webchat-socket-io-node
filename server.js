@@ -17,36 +17,39 @@ const io = socket(server);
 const PORT = 3000 || process.env.PORT;
 
 // middleware
-app.use(express.static(path.join(__dirname, "public"))); // set static folder to render html
+app.use(express.static(path.join(__dirname, "public")));
 
 io.on("connection", (socket) => {
   // run when client instance joins chatroom
   socket.on("join", ({ username, room }) => {
-    const user = joinUser(socket.id, username, room);
-    socket.join(user.room);
+    const u = joinUser(socket.id, username, room);
+
+    socket.join(u.room);
 
     socket.emit(
       "message",
-      formatMessage("Chatbot", `Welcome to the ${room} chatroom!`)
-    ); // emits a message to newly connected client instance
-    socket.broadcast.emit(
-      "message",
-      formatMessage("Chatbot", `${username} has entered the chatroom!`)
-    ); // broadcasts a message to all instances minus client instance
-    // io.emit("", "") --> sends message to client
+      formatMessage("Chatbot", `Welcome to the ${u.room} chatroom!`)
+    );
+    socket.broadcast
+      .to(u.room)
+      .emit(
+        "message",
+        formatMessage("Chatbot", `${u.username} has entered the chatroom!`)
+      );
   });
 
   // listens for user message submission
   socket.on("userMessage", (message) => {
-    console.log(`${username} message received:`, message);
-    io.emit("message", formatMessage(`${username}`, message)); // emit user message to client
+    const u = getCurrentUser(socket.id);
+    io.to(u.room).emit("message", formatMessage(`${u.username}`, message));
   });
 
   // runs when client instance disconnects
   socket.on("disconnect", () => {
-    io.emit(
+    const u = getCurrentUser(socket.id);
+    io.to(u.room).emit(
       "message",
-      formatMessage("Chatbot", `${username} has left the chatroom.`)
+      formatMessage("Chatbot", `${u.username} has left the chatroom.`)
     );
   });
 });
@@ -56,7 +59,6 @@ io.on("connection", (socket) => {
 // app.listen(PORT, () => {
 //   console.log(`Express Server Running: ${PORT}`);
 // });
-
 server.listen(PORT, () => {
   console.log(`Express Server Running: ${PORT}`);
 });
