@@ -3,12 +3,16 @@ const form = document.getElementById("chat-form");
 const messages = document.getElementsByClassName("chat-messages");
 const socket = io(); // socket.io script from chat.html
 
-// url query
+// url query -> username && chatroom
 const { username, room } = Qs.parse(location.search, {
+  // avoids special characters in the url query
   ignoreQueryPrefix: true,
 });
 
 console.log(username, room);
+
+// join chatroom
+socket.emit("join", { username, room });
 
 // message response from server
 socket.on("message", (msg) => {
