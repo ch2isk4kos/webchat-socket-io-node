@@ -17,13 +17,19 @@ app.use(express.static(path.join(__dirname, "public"))); // set static folder to
 // Listeners
 io.on("connection", (socket) => {
   // run server when client connects
-  socket.emit("message", "Welcome to the chatroom!"); // emit a message to newly connected client instance
-  socket.broadcast.emit("message", "New user has entered the chatroom!"); // broadcast a message to client minus client instance
-  // io.emit("", "") --> sends message to all instances
+  socket.emit("message", "Welcome to the chatroom!"); // emits a message to newly connected client instance
+  socket.broadcast.emit("message", "New user has entered the chatroom!"); // broadcasts a message to all instances minus client instance
+  // io.emit("", "") --> sends message to client
 
   // runs when client instance disconnects
   socket.on("disconnect", () => {
     io.emit("message", "User has left the chatroom.");
+  });
+
+  // listen for user message submission
+  socket.on("userMessage", (message) => {
+    console.log("user message received:", message);
+    io.emit("message", message); // emit user message to client
   });
 });
 
