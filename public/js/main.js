@@ -1,11 +1,13 @@
 // main.js listens for client events to send server.js
 const form = document.getElementById("chat-form");
+const messages = document.getElementsByClassName("chat-messages");
 const socket = io(); // socket.io script from chat.html
 
-// message from server
-socket.on("message", (message) => {
-  console.log("message:", message);
-  renderMessage(message);
+// message response from server
+socket.on("message", (msg) => {
+  console.log("message:", msg);
+  renderMessage(msg);
+  messages.scrollTop = messages.scrollHeight; // scroll down on new message
 });
 
 // add listener for form submission
@@ -14,6 +16,8 @@ form.addEventListener("submit", (e) => {
   const message = e.target.elements.msg.value; // get client instance message string
   console.log("message sent to server:", message);
   socket.emit("userMessage", message); // emit client instance message to the server
+  e.target.elements.msg.value = "";
+  e.target.elements.msg.focus();
 });
 
 // display message to DOM
