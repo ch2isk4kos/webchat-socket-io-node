@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
   // listen for user message submission
   socket.on("userMessage", (message) => {
     console.log("user message received:", message);
-    io.emit("message", formatMessage("USER", message)); // emit user message to client
+    io.emit("message", formatMessage(`USER`, message)); // emit user message to client
   });
 });
 
