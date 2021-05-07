@@ -10,6 +10,6 @@ socket.on("message", (message) => {
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const message = e.target.elements.msg.value; // get client instance message string
-  console.log("message to submit:", message);
+  console.log("message sent to server:", message);
   socket.emit("userMessage", message); // emit client instance message to the server
 });
